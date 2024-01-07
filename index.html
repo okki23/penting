@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <button onclick="AddItem();"> Add Item</button>
+    <br>
+    <table class="table table-striped table-hover" id="item_table" border="1">
+        <thead id="thead">
+            <tr class="bg-primary">
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Discount</th>
+                <th>Grand Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="item_list">
+            <!-- <tr>
+                <td>1</td>
+                <td>Test 1</td>
+                <td><input type="number" class="form-control quantity" name="quantity[]" value="1" min="1" step="1">
+                </td>
+                <td class="sprice">10</td>
+                <td class="discount">2%</td>
+                <td><input type="text" class="form-control discount2" name="discount2"></td>
+                <td class="total">10</td>
+                <td><span><i class="fa fa-trash"></i></span></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Test 2</td>
+                <td><input type="number" class="form-control quantity" name="quantity[]" value="1" min="1" step="1">
+                </td>
+                <td class="sprice">20</td>
+                <td class="discount">5%</td>
+                <td><input type="text" class="form-control discount2" name="discount2"></td>
+                <td class="total">20</td>
+                <td><span><i class="fa fa-trash"></i></span></td>
+            </tr> -->
+        </tbody>
+        <p>Amount Total : </p>
+        <div id="totals"></div>
+
+        <input type="text" id="bayars">
+        <hr>
+        <h5> Bayar : </h5>
+        <input type="text" id="uangs" onkeyup="Balikin(this);">
+
+        <hr>
+        <h5> Total kembalian </h5>
+        <div id="jujule"></div>
+    </table>
+
+</body>
+
+<script>
+    var x = 1;
+    function Balikin(e) {
+        //     var isian = $(this).val(e);
+        var bayars = $("#bayars").val();
+        calc = (bayars - (e.value));
+        $("#jujule").html(calc);
+        // console.log(calc);
+    }
+    function btnDelete() {
+        $(this).closest('tr').remove();
+    }
+
+    $("#item_list").on('click', '.btnDelete', function () {
+        $(this).closest('tr').remove();
+        calc();
+    });
+    function AddItem() {
+        const price = 5000;
+        const qty = 1;
+
+
+        $(" #item_list").append("<tr rowID='" + x + "'>" +
+            "<td> " + x + "</td>" +
+            "<td> Nasi Goreng</td>" +
+            "<td> <input type='number' class='form - control quantity' name='quantity[]' value='1' min='1' step='1'></td>" +
+            "<td class='sprice'>5000</td>" +
+            "<td class='discount'>2%</td>" +
+
+            "<td class='total'>" + (price * qty) + "</td>" +
+            "<td> <button class='btnDelete'>Delete</button> </td>" +
+            "<tr>");
+        x += 1;
+
+        calc();
+    }
+
+    function calc() {
+        var tr = $(this).parent().parent();
+
+        var sprice = tr.find(".sprice").text();
+        var quantity = tr.find(".quantity").val();
+        var discount = tr.find(".discount").text().slice(0, -1);
+        // var discount2 = tr.find(".discount2").val();
+
+        // calculate total
+        var totalDiscount = ((sprice * quantity) * discount / 100);
+        var price = (((sprice * quantity) - totalDiscount));
+        var total = parseFloat(price).toFixed(2);
+        tr.find(".total").html(total);
+
+        // calculate grand total
+        var grandTotal = 0.00;
+        $('tr > .total').each(function (i, v) {
+            grandTotal = (parseFloat(grandTotal) + parseFloat($(this).text())).toFixed(2);
+            $("#totals").html(grandTotal);
+            $("#bayars").val(grandTotal);
+        });
+
+        console.log('Grand Total: ', grandTotal);
+    }
+    $(function () {
+        $('body').on("keyup change", ".quantity, .btnDelete", function () {
+            var tr = $(this).parent().parent();
+
+            var sprice = tr.find(".sprice").text();
+            var quantity = tr.find(".quantity").val();
+            var discount = tr.find(".discount").text().slice(0, -1);
+            // var discount2 = tr.find(".discount2").val();
+
+            // calculate total
+            var totalDiscount = ((sprice * quantity) * discount / 100);
+            var price = (((sprice * quantity) - totalDiscount));
+            var total = parseFloat(price).toFixed(2);
+            tr.find(".total").html(total);
+
+            // calculate grand total
+            var grandTotal = 2.00;
+            $('tr > .total').each(function (i, v) {
+                grandTotal = (parseFloat(grandTotal) + parseFloat($(this).text())).toFixed(2);
+                $("#totals").html(grandTotal);
+                $("#bayars").val(grandTotal);
+            });
+
+            console.log('Grand Total: ', grandTotal);
+        });
+    });
+</script>
+
+</html>
